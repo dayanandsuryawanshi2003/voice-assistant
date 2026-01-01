@@ -13,7 +13,7 @@ import "./config/passport.js"
 const app=express();
 const port=process.env.PORT || 5000;
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: "https://virtual-voice-assistant-a1fn.onrender.com",
     credentials: true
 }));
 
