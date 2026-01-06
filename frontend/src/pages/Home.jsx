@@ -18,12 +18,13 @@ function Home() {
   const [aiText,setAiText]=useState("")
   const [ham,setHam]=useState(false)
   const [micOn, setMicOn] = useState(true)
-  const synth=window.speechSynthesis
+  
   const recognitionRef=useRef(null)
   const isSpeakingRef=useRef(false)
   const isRecognizingRef=useRef(false)
   const micDisabledRef = useRef(false)
   const openedTabRef = useRef(null)
+  const synth=window.speechSynthesis;
 
   const handleLogOut=async ()=>{
     try {
@@ -46,6 +47,7 @@ function Home() {
 
   const startRecognition=()=>{
     if (micDisabledRef.current) return
+
     if(!isSpeakingRef.current && !isRecognizingRef.current && recognitionRef.current){
     try{
       recognitionRef.current.start();
@@ -54,24 +56,31 @@ function Home() {
         console.error("Start error:",error);
     }
   }}
+
+  const stopRecognition = () => {
+    if (recognitionRef.current && isRecognizingRef.current) {
+      try {
+        recognitionRef.current.stop()
+      } catch (err) {
+        console.error("Stop error:", err)
+      } finally {
+        isRecognizingRef.current = false
+        setListening(false)
+      }
+    }
+  }
+   // Toggle mic
   const toggleMic = () => {
     if (micOn) {
-      // 🔴 HARD MIC OFF
+      // Mic OFF
       micDisabledRef.current = true
       setMicOn(false)
 
-      try {
-        recognitionRef.current?.abort() // IMPORTANT
-      } catch {}
-
-      try {
-        synth.cancel()
-      } catch {}
-
-      isRecognizingRef.current = false
+      stopRecognition()
+      try { synth.cancel() } catch {}
       isSpeakingRef.current = false
     } else {
-      // 🎤 MIC ON
+      // Mic ON
       micDisabledRef.current = false
       setMicOn(true)
       startRecognition()
@@ -83,7 +92,7 @@ function Home() {
             try { synth.cancel() } catch (e) { console.error("Cancel error:", e) }
         }
     
-    try { recognitionRef.current.stop(); } catch (e) {}
+   // try { recognitionRef.current.stop(); } catch (e) {}
     const utterence=new SpeechSynthesisUtterance(text)
     utterence.lang = 'hi-IN';
     const voices = window.speechSynthesis.getVoices()
@@ -176,9 +185,9 @@ function Home() {
     recognition.onend = ()=> {
       isRecognizingRef.current = false;
       setListening(false);
-      if (!micDisabledRef.current) {
+      /*if (!micDisabledRef.current) {
         setTimeout(startRecognition, 800)
-      }
+      }*/
       console.log("Recognition ended");
     };
     recognition.onerror = (event)=> {
@@ -196,9 +205,9 @@ function Home() {
       if(lowerTranscript.includes(assistantName) || lowerTranscript.length > 0){
         const cleanCommand = lowerTranscript.replace(assistantName, "").trim();
         setUserText(transcript)
-        recognition.stop()
+        /*recognition.stop()
         isRecognizingRef.current=false
-        setListening(false)
+        setListening(false)*/
         console.log("Command received:", transcript);
         const data = await getGeminiResponse(cleanCommand || transcript);
 
@@ -209,6 +218,9 @@ function Home() {
 
         setAiText(data.response);
         handleCommand(data);
+        setTimeout(() => {
+          startRecognition();
+        }, 800);
 
         setUserText("")
       }
@@ -217,16 +229,16 @@ function Home() {
     performInitialGreeting();
     
     
-    const fallback=setInterval(()=>{
+    /*const fallback=setInterval(()=>{
       if(!isSpeakingRef.current && !isRecognizingRef.current && isMounted){
         startRecognition();
       }
-    },5000)
+    },5000)*/
     
     return()=>{
       isMounted=false;
       
-      clearInterval(fallback);
+      //clearInterval(fallback);
       try { 
           recognitionRef.current.stop();
           synth.cancel();
