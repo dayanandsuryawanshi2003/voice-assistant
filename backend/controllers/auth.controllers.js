@@ -22,8 +22,8 @@ try {
     res.cookie("token",token,{
         httpOnly:true,
         maxAge:10*24*60*60*1000,
-        sameSite:"lax",
-        secure:false ,
+        sameSite:"none",
+        secure:true ,
         path: "/"
     })
     return res.status(201).json(user)
@@ -52,8 +52,8 @@ try {
     res.cookie("token",token,{
         httpOnly:true,
         maxAge:10*24*60*60*1000,
-        sameSite:"lax",
-        secure:false ,
+        sameSite:"none",
+        secure:true ,
         path:"/"
     })
     
@@ -85,8 +85,8 @@ export const googleSignIn = async (req, res) => {
         res.cookie("token", token, {
             httpOnly: true,
             maxAge: 10 * 24 * 60 * 60 * 1000,
-            sameSite: "lax",
-            secure: false,
+            sameSite: "none",
+            secure: true,
             path: "/"
         });
 
