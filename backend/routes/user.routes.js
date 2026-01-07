@@ -9,7 +9,6 @@ const userRouter = express.Router();
 userRouter.get("/current", isAuth, getCurrentUser);
 userRouter.post(
   "/update",
-  cors({ origin: "voice-assistant-fawn-three.vercel.app", credentials: true }),
   isAuth,
   upload.single("assistantImage"),
   updateAssistant
