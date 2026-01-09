@@ -126,7 +126,7 @@ export const askToAssistant=async (req,res)=>{
                      response: `current date is ${moment().tz("Asia/Kolkata").format("YYYY-MM-DD")}`,
                  });
 
-            case 'get-time': {
+            case 'get-time': 
                  const time = moment()
                  .tz("Asia/Kolkata")
                  .format("hh:mm A");
@@ -136,15 +136,15 @@ export const askToAssistant=async (req,res)=>{
                       response: `current time is ${time}`,
                  });
                 
-            case 'get-day':{
+            case 'get-day':
                  return res.json({
                     type: gem.type,
-                    response:`today is  ${moment().tz("Asia/kolkata").format("dddd")}`,
+                    response:`today is  ${moment().tz("Asia/Kolkata").format("dddd")}`,
                 });
             case 'get-month':
                  return res.json({
                     type: gem.type,
-                    response:`current month is ${moment().tz("Asia/kolkata").format("MMMM")}`,
+                    response:`current month is ${moment().tz("Asia/Kolkata").format("MMMM")}`,
                 });
             default:
                  return res.json({
