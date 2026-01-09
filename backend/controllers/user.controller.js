@@ -2,7 +2,7 @@ import path from "path"
 import User from "../models/user.model.js"
 import {v2 as cloudinary} from "cloudinary"
 import fs from "fs"
-import moment from "moment"
+import moment from "moment-timezone"
 import geminiResponse from "../gemini.js"
 
 const uploadToCloudinary = async (filePath, folder = "avatars") => {
@@ -121,24 +121,30 @@ export const askToAssistant=async (req,res)=>{
 
         switch(gem.type){
             case 'get-date':
-                return res.json({
-                    type:gem.type,
-                    response:`current date is ${moment().format("YYYY-MM-DD")}`,
-                });
-            case 'get-time':
                  return res.json({
-                    type: gem.type,
-                    response:`current time is ${moment().format("hh:mm A")}`,
-                });
+                     type: gem.type,
+                     response: `current date is ${moment().tz("Asia/Kolkata").format("YYYY-MM-DD")}`,
+                 });
+
+            case 'get-time': {
+                 const time = moment()
+                 .tz("Asia/Kolkata")
+                 .format("hh:mm A");
+
+                  return res.json({
+                      type: gem.type,
+                      response: `current time is ${time}`,
+                 });
+            
             case 'get-day':
                  return res.json({
                     type: gem.type,
-                    response:`today is a ${moment().format("dddd")}`,
+                    response:`today is  ${moment().tz("Asia/kolkata").format("dddd")}`,
                 });
             case 'get-month':
                  return res.json({
                     type: gem.type,
-                    response:`current month is ${moment().format("MMMM")}`,
+                    response:`current month is ${moment().tz("Asia/kolkata").format("MMMM")}`,
                 });
             default:
                  return res.json({
