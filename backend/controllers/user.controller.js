@@ -135,8 +135,8 @@ export const askToAssistant=async (req,res)=>{
                       type: gem.type,
                       response: `current time is ${time}`,
                  });
-            
-            case 'get-day':
+                
+            case 'get-day':{
                  return res.json({
                     type: gem.type,
                     response:`today is  ${moment().tz("Asia/kolkata").format("dddd")}`,
