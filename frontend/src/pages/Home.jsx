@@ -202,6 +202,23 @@ function Home() {
       const transcript=e.results[e.results.length-1][0].transcript.trim()
       const lowerTranscript = transcript.toLowerCase();
       const assistantName = userData.assistantName.toLowerCase();
+       // 🔴 VOICE LOGOUT COMMAND
+      if (
+          lowerTranscript.includes("bye bye") ||
+          lowerTranscript.includes("logout now") ||
+          lowerTranscript.includes("log out")
+      ) {
+        stopRecognition();
+        synth.cancel();
+  
+         speak(`Ok bye ${userData.name}`);
+
+         setTimeout(() => {
+         handleLogOut();
+        }, 2000);
+
+        return; // important
+      }
       if(lowerTranscript.includes(assistantName) || lowerTranscript.length > 0){
         const cleanCommand = lowerTranscript.replace(assistantName, "").trim();
         setUserText(transcript)
